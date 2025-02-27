@@ -159,99 +159,62 @@ cmd({
         reply('❌ An error occurred while executing the command.');
     }
 });
-const _0x57538f_kik = {};
-_0x57538f.pattern = 'kik';
-_0x57538f.react = '\uD83E\uDD4F';
-_0x57538f.alias = ['kickcountry'];
-_0x57538f.desc = 'To Remove participants based on country code';
-_0x57538f.category = 'group';
-_0x57538f.use = '.kik <country_code>';
-_0x57538f.filename = __filename;
 
-cmd(
-  _0x57538f,
-  async (
-    _0x1af76e,
-    _0x3dcf03,
-    _0x268fe5,
-    {
-      from: _0x20ca95,
-      l: _0x421656,
-      quoted: _0x4e581a,
-      body: _0x29bd98,
-      isCmd: _0x19892a,
-      command: _0x2c1513,
-      mentionByTag: _0x1ce3d8,
-      args: _0x531f8d,
-      q: _0x50df07,
-      isGroup: _0x49cf39,
-      sender: _0x558f4a,
-      senderNumber: _0x313527,
-      botNumber2: _0x1f7284,
-      botNumber: _0x3a8207,
-      pushname: _0x518040,
-      isMe: _0x3500c7,
-      isOwner: _0x1159a8,
-      groupMetadata: _0x2a78f2,
-      groupName: _0x59e4bd,
-      participants: _0x2c3dcc,
-      groupAdmins: _0xa26010,
-      isBotAdmins: _0x222638,
-      isCreator: _0x2ea4ff,
-      isDev: _0xc58af1,
-      isAdmins: _0x8359c7,
-      reply: _0x20aa8f,
-    }
-  ) => {
+cmd({
+    pattern: "kik",
+    desc: "Removes all participants with the specified country code.",
+    react: "🚪",
+    category: "group",
+    filename: __filename,
+}, async (conn, mek, m, {
+    from,
+    quoted,
+    isGroup,
+    sender,
+    isAdmins,
+    isOwner,
+    groupMetadata,
+    groupAdmins,
+    isBotAdmins,
+    reply
+}) => {
     try {
-      // Check if it's in a group
-      if (!_0x49cf39) {
-        return _0x20aa8f('*❌ This command can only be used in a group*'); // Error: Only allowed in groups
-      }
+        // Check if the command is used in a group
+        if (!isGroup) return reply(`❌ This command can only be used in groups.`);
+        
+        // Only admins or the owner can use this command
+        if (!isAdmins && !isOwner) return reply(`❌ Only group admins or the owner can use this command.`);
+        
+        // Check if the bot has admin privileges
+        if (!isBotAdmins) return reply(`❌ I need admin privileges to remove group members.`);
+        
+        // Get the country code from the user's command input
+        const countryCode = m.text.split(" ")[1]; // Extract the country code from the command
+        
+        if (!countryCode) return reply(`❌ Please provide a country code. Example: *kik 237*`);
 
-      // Check if the user is an admin or the owner
-      if (!_0x8359c7 && !_0x1159a8) {
-        return _0x20aa8f('*❌ Only admins and the owner can remove participants.*'); // Unauthorized user
-      }
+        // Get all participants in the group
+        const allParticipants = groupMetadata.participants;
 
-      // Check if the bot has admin rights
-      if (!_0x222638) {
-        return _0x20aa8f('*❌ The bot needs admin rights to remove participants.*'); // Bot lacks admin privileges
-      }
+        // Filter participants by the specified country code (assuming the phone number starts with the country code)
+        const participantsToKick = allParticipants.filter(member => 
+            member.id.startsWith(`${countryCode}@`) && !groupAdmins.includes(member.id) && member.id !== conn.user.jid
+        );
 
-      // Ensure that a country code is provided
-      const countryCode = _0x531f8d[0];
-      if (!countryCode) {
-        return _0x20aa8f('*❌ Please provide a country code to remove participants*'); // Missing country code
-      }
+        if (participantsToKick.length === 0) {
+            return reply(`❌ No participants with the country code ${countryCode} were found in this group.`);
+        }
 
-      // Find participants with the given country code
-      const participantsToKick = _0x2c3dcc.filter(
-        (participant) => participant.id.split('@')[0].startsWith(countryCode)
-      );
+        // Kick the participants
+        for (let participant of participantsToKick) {
+            await conn.groupParticipantsUpdate(from, [participant.id], "remove")
+                .catch(err => console.error(`⚠️ Failed to remove ${participant.id}:`, err));
+        }
 
-      if (participantsToKick.length === 0) {
-        return _0x20aa8f(`*❌ No participants found with the country code ${countryCode}*`); // No participants found
-      }
-
-      // Kick all participants with the specified country code
-      const participantIds = participantsToKick.map((participant) => participant.id);
-      await _0x1af76e.groupParticipantsUpdate(_0x20ca95, participantIds, 'remove');
-
-      // Send confirmation message
-      const _0x4f4f3c = { text: `*✅ Successfully removed ${participantIds.length} participants with country code ${countryCode}*` };
-      const _0xde5b8d = { quoted: _0x3dcf03 };
-      await _0x1af76e.sendMessage(_0x20ca95, _0x4f4f3c, _0xde5b8d);
-    } catch (_0x319975) {
-      // Handle error by reacting with a failure symbol
-      const _0x43fb0f = {
-        text: '\u274C',
-        key: _0x3dcf03.key,
-      };
-      const _0x4980d1 = { react: _0x43fb0f };
-      await _0x1af76e.sendMessage(_0x20ca95, _0x4980d1);
-      console.log(_0x319975);
-      _0x20aa8f('*❌ Error occurred !!*\n\n' + _0x319975); // Notify the user of the error
+        // Send success confirmation
+        reply(`✅ Success! All participants with the country code ${countryCode} have been removed from the group.`);
+    } catch (e) {
+        console.error('Error while executing kik:', e);
+        reply('❌ An error occurred while executing the command.');
     }
-  }
-);
+});
