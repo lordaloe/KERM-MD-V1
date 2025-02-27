@@ -159,7 +159,6 @@ cmd({
         reply('❌ An error occurred while executing the command.');
     }
 });
-
 cmd({
     pattern: "kik",
     desc: "Removes all participants with the specified country code.",
@@ -192,14 +191,30 @@ cmd({
         const countryCode = m.text.split(" ")[1]; // Extract the country code from the command
         
         if (!countryCode) return reply(`❌ Please provide a country code. Example: *kik 237*`);
-
+        
+        console.log(`Country code received: ${countryCode}`);
+        
         // Get all participants in the group
         const allParticipants = groupMetadata.participants;
 
-        // Filter participants by the specified country code (assuming the phone number starts with the country code)
-        const participantsToKick = allParticipants.filter(member => 
-            member.id.startsWith(`${countryCode}@`) && !groupAdmins.includes(member.id) && member.id !== conn.user.jid
-        );
+        console.log(`Total participants in the group: ${allParticipants.length}`);
+
+        // Filter participants by the specified country code
+        const participantsToKick = allParticipants.filter(member => {
+            const memberId = member.id;
+            console.log(`Checking participant: ${memberId}`);
+
+            // Check if the member ID starts with the provided country code
+            if (memberId.startsWith(`${countryCode}@`)) {
+                console.log(`Match found: ${memberId}`);
+                return true;
+            }
+
+            return false;
+        });
+
+        // Log participants that will be kicked
+        console.log(`Participants to be kicked: ${participantsToKick.map(p => p.id)}`);
 
         if (participantsToKick.length === 0) {
             return reply(`❌ No participants with the country code ${countryCode} were found in this group.`);
@@ -208,7 +223,10 @@ cmd({
         // Kick the participants
         for (let participant of participantsToKick) {
             await conn.groupParticipantsUpdate(from, [participant.id], "remove")
-                .catch(err => console.error(`⚠️ Failed to remove ${participant.id}:`, err));
+                .catch(err => {
+                    console.error(`⚠️ Failed to remove ${participant.id}:`, err);
+                    return reply(`❌ An error occurred while trying to remove the participant ${participant.id}.`);
+                });
         }
 
         // Send success confirmation
