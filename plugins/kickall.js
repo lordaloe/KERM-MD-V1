@@ -160,79 +160,52 @@ cmd({
     }
 });
 cmd({
-    pattern: "kik",
-    desc: "Removes all participants with the specified country code.",
-    react: "🚪",
+    pattern: "adds",
+    desc: "Adds a number to the group, removing spaces and handling formats.",
+    react: "➕",
     category: "group",
     filename: __filename,
 }, async (conn, mek, m, {
     from,
-    quoted,
     isGroup,
     sender,
-    isAdmins,
     isOwner,
     groupMetadata,
-    groupAdmins,
-    isBotAdmins,
     reply
 }) => {
     try {
         // Check if the command is used in a group
         if (!isGroup) return reply(`❌ This command can only be used in groups.`);
         
-        // Only admins or the owner can use this command
-        if (!isAdmins && !isOwner) return reply(`❌ Only group admins or the owner can use this command.`);
+        // Only the owner can use this command
+        if (!isOwner) return reply(`❌ Only the group owner can use this command.`);
         
-        // Check if the bot has admin privileges
-        if (!isBotAdmins) return reply(`❌ I need admin privileges to remove group members.`);
+        // Extract the number from the command
+        const phoneNumber = m.text.split(" ")[1]; // Get the phone number provided by the user
         
-        // Get the country code from the user's command input
-        const countryCode = m.text.split(" ")[1]; // Extract the country code from the command
-        
-        if (!countryCode) return reply(`❌ Please provide a country code. Example: *kik 237*`);
-        
-        console.log(`Country code received: ${countryCode}`);
-        
-        // Get all participants in the group
-        const allParticipants = groupMetadata.participants;
+        if (!phoneNumber) return reply(`❌ Please provide a phone number. Example: *add +237xxxxxxxxx*`);
 
-        console.log(`Total participants in the group: ${allParticipants.length}`);
+        // Remove spaces and handle the '+' sign at the beginning
+        const formattedNumber = phoneNumber.replace(/\s+/g, '').replace(/^(\+)?(\d+)/, '$2'); // Remove spaces and handle the number format
 
-        // Filter participants by the specified country code
-        const participantsToKick = allParticipants.filter(member => {
-            const memberId = member.id;
-            console.log(`Checking participant: ${memberId}`);
+        console.log(`Formatted number: ${formattedNumber}`);
 
-            // Check if the member ID starts with the provided country code
-            if (memberId.startsWith(`${countryCode}@`)) {
-                console.log(`Match found: ${memberId}`);
-                return true;
-            }
-
-            return false;
-        });
-
-        // Log participants that will be kicked
-        console.log(`Participants to be kicked: ${participantsToKick.map(p => p.id)}`);
-
-        if (participantsToKick.length === 0) {
-            return reply(`❌ No participants with the country code ${countryCode} were found in this group.`);
+        // Check if the number is valid (in this case, we check if it's at least 10 digits long)
+        if (formattedNumber.length < 10) {
+            return reply(`❌ The phone number seems to be invalid. Please provide a valid phone number.`);
         }
 
-        // Kick the participants
-        for (let participant of participantsToKick) {
-            await conn.groupParticipantsUpdate(from, [participant.id], "remove")
-                .catch(err => {
-                    console.error(`⚠️ Failed to remove ${participant.id}:`, err);
-                    return reply(`❌ An error occurred while trying to remove the participant ${participant.id}.`);
-                });
-        }
+        // Add the number to the group
+        await conn.groupParticipantsUpdate(from, [formattedNumber + '@c.us'], "add")
+            .catch(err => {
+                console.error(`⚠️ Failed to add ${formattedNumber}:`, err);
+                return reply(`❌ An error occurred while trying to add the participant.`);
+            });
 
         // Send success confirmation
-        reply(`✅ Success! All participants with the country code ${countryCode} have been removed from the group.`);
+        reply(`✅ Success! The number ${formattedNumber} has been added to the group.`);
     } catch (e) {
-        console.error('Error while executing kik:', e);
+        console.error('Error while executing add:', e);
         reply('❌ An error occurred while executing the command.');
     }
 });
