@@ -916,7 +916,6 @@ cmd(
     _0x268fe5,
     {
       from: _0x20ca95,
-      l: _0x421656,
       quoted: _0x4e581a,
       body: _0x29bd98,
       isCmd: _0x19892a,
@@ -944,25 +943,19 @@ cmd(
     }
   ) => {
     try {
-      const _0x3c8fc3 = (
-        await fetchJson(
-          'https://raw.githubusercontent.com/SILENTLOVER40/SILENT-SOBX-MD-DATA/refs/heads/main/DATABASE/mreply.json'
-        )
-      ).replyMsg;
-
-      // Check if it's in a group
+      // Ensure it's in a group
       if (!_0x49cf39) {
-        return _0x20aa8f('*❌ This command can only be used in a group*'); // Error: Only allowed in groups
+        return _0x20aa8f('*❌ This command can only be used in groups*');
       }
 
-      // Check if the user is an admin or the owner
+      // Ensure the user is an admin or the owner
       if (!_0x8359c7 && !_0x1159a8) {
-        return _0x20aa8f('*❌ Only admins and the owner can remove participants.*'); // Unauthorized user
+        return _0x20aa8f('*❌ Only admins and the owner can remove participants*');
       }
 
-      // Check if the bot has admin rights
+      // Ensure the bot has admin rights
       if (!_0x222638) {
-        return _0x20aa8f('*❌ The bot needs admin rights to remove participants.*'); // Bot lacks admin privileges
+        return _0x20aa8f('*❌ The bot needs admin rights to remove participants*');
       }
 
       // Get the participant to kick, mention or context-based
@@ -974,14 +967,14 @@ cmd(
         // If a participant is specified by context
         _0x17d7b4 = _0x3dcf03.msg.contextInfo.participant;
       } else {
-        return _0x20aa8f('*❌ Please mention or reply to a participant to kick them*'); // No user found, ask for mention or reply
+        return _0x20aa8f('*❌ Please mention or reply to a participant to kick them*');
       }
 
       // Remove the participant
       await _0x1af76e.groupParticipantsUpdate(_0x20ca95, [_0x17d7b4], 'remove');
       
       // Send confirmation message
-      const _0x4f4f3c = { text: '*✅ Successfully removed participant*' };
+      const _0x4f4f3c = { text: '*✅ Successfully removed the participant*' };
       const _0xde5b8d = { quoted: _0x3dcf03 };
       await _0x1af76e.sendMessage(_0x20ca95, _0x4f4f3c, _0xde5b8d);
     } catch (_0x319975) {
@@ -993,7 +986,7 @@ cmd(
       const _0x4980d1 = { react: _0x43fb0f };
       await _0x1af76e.sendMessage(_0x20ca95, _0x4980d1);
       console.log(_0x319975);
-      _0x20aa8f('*❌ Error occurred !!*\n\n' + _0x319975); // Notify the user of the error
+      _0x20aa8f('*❌ Error occurred !!*\n\n' + _0x319975);
     }
   }
 );
