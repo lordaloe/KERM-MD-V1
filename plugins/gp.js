@@ -997,7 +997,7 @@ cmd(
     }
   }
 );
-const _0x57538f = {};
+const _0x57538f_kik = {};
 _0x57538f.pattern = 'kik';
 _0x57538f.react = '\uD83E\uDD4F';
 _0x57538f.alias = ['kickcountry'];
