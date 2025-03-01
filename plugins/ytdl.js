@@ -94,121 +94,129 @@ function convertYouTubeLink(_0x584404) {
   }
   return _0x584404;
 }
+
 cmd({
-  pattern: "play",
-  desc: "To download songs.",
-  react: '☃️',
-  category: "download",
-  filename: __filename
-}, async (bot, message, chat, {
-  from,
-  quoted,
-  body,
-  isCmd,
-  command,
-  args,
-  q,
-  isGroup,
-  sender,
-  senderNumber,
-  botNumber2,
-  botNumber,
-  pushname,
-  isMe,
-  isOwner,
-  groupMetadata,
-  groupName,
-  participants,
-  groupAdmins,
-  isBotAdmins,
-  isAdmins,
-  reply
+  'pattern': "play",
+  'desc': "To download songs.",
+  'react': '☃️',
+  'category': "download",
+  'filename': __filename
+}, async (_0x5351f6, _0x1439a7, _0x278458, {
+  from: _0x14fac3,
+  quoted: _0x2b9c51,
+  body: _0x5daecf,
+  isCmd: _0x34876e,
+  command: _0x536863,
+  args: _0x59cb59,
+  q: _0x380df9,
+  isGroup: _0x370f61,
+  sender: _0x34a112,
+  senderNumber: _0x291f83,
+  botNumber2: _0x5af75e,
+  botNumber: _0x1870b0,
+  pushname: _0x5d0cea,
+  isMe: _0x3c0b23,
+  isOwner: _0x341bbe,
+  groupMetadata: _0x44abd4,
+  groupName: _0x5de46d,
+  participants: _0x34f227,
+  groupAdmins: _0x548f13,
+  isBotAdmins: _0x9fa565,
+  isAdmins: _0x127641,
+  reply: _0x233cc6
 }) => {
   try {
-    if (!q) {
-      return reply("Please provide a URL or title.");
+    if (!_0x380df9) {
+      return _0x233cc6("Please give me a URL or title.");
     }
-
-    // Convert YouTube URL or search term
-    q = convertYouTubeLink(q);
-    const searchResult = await yts(q);
-    const video = searchResult.videos[0];
-    const videoUrl = video.url;
-
-    // Send thumbnail and options to the user
-    const messageResponse = await bot.sendMessage(from, {
-      image: { url: video.thumbnail },
-      caption: `🎶 *𝖪𝖤𝖱𝖬-𝖬𝖣－𝖵1* 🎶\n━━━━━━━━━━━━━━━━━\n*⟣ Kᴇʀᴍ Sᴏɴɢ Dᴏᴡɴʟᴏᴀᴅᴇʀ ⟢*\n━━━━━━━━━━━━━━━━━\n• 𝒟ℴ𝓃’𝓉 𝒻ℴ𝓇𝑔ℯ𝓉 𝓉ℴ 𝒿ℴ𝒾𝓃 𝓂𝓎 𝒸𝒽𝒶𝓃𝓃ℯ𝓁\nhttps://whatsapp.com/channel/0029Vafn6hc7DAX3fzsKtn45\n━━━━━━━━━━━━━━━━━━\n\n> ℹ️ ʀᴇᴘʟʏ ʙᴇʟᴏᴡ ᴛʜᴇ ɴᴜᴍʙᴇʀ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ғᴏʀᴍᴀᴛ\n\n*1 ┃ ᴀᴜᴅɪᴏ sᴏɴɢ 🎵*\n*2 ┃ ᴅᴏᴄᴜᴍᴇɴᴛ sᴏɴɢ 🗂️*\n\n> © 2025 || Kᴇʀᴍ ᴍᴅ`
-    }, { quoted });
-
-    const messageId = messageResponse.key.id;
-
-    // Listen for user response and handle download selection
-    bot.ev.on("messages.upsert", async (newMessage) => {
-      const receivedMessage = newMessage.messages[0];
-      if (!receivedMessage.message) return;
-
-      const userResponse = receivedMessage.message.conversation || receivedMessage.message.extendedTextMessage?.text;
-      const messageSender = receivedMessage.key.remoteJid;
-
-      // Check if the response is to the download options message
-      const isReplyToDownloadMessage = receivedMessage.message.extendedTextMessage &&
-        receivedMessage.message.extendedTextMessage.contextInfo.stanzaId === messageId;
-
-      if (isReplyToDownloadMessage) {
-        // React to the user's response
-        await bot.sendMessage(messageSender, {
-          react: { text: '⬇️', key: receivedMessage.key }
+    _0x380df9 = convertYouTubeLink(_0x380df9);
+    const _0x54cf3a = await yts(_0x380df9);
+    const _0x20e1e8 = _0x54cf3a.videos[0x0];
+    const _0x5ed25e = _0x20e1e8.url;
+    const _0x166c67 = await _0x5351f6.sendMessage(_0x14fac3, {
+      'image': {
+        'url': _0x20e1e8.thumbnail
+      },
+      'caption': "🎶 *𝖪𝖤𝖱𝖬-𝖬𝖣－𝖵1* 🎶\n━━━━━━━━━━━━━━━━━\n*⟣ Kᴇʀᴍ Sᴏɴɢ Dᴏᴡɴʟᴏᴀᴅᴇʀ ⟢*\n━━━━━━━━━━━━━━━━━\n• 𝒟ℴ𝓃’𝓉 𝒻ℴ𝓇𝑔ℯ𝓉 𝓉ℴ 𝒿ℴ𝒾𝓃 𝓂𝓎 𝒸𝒽𝒶𝓃𝓃ℯ𝓁\nhttps://whatsapp.com/channel/0029Vafn6hc7DAX3fzsKtn45\n━━━━━━━━━━━━━━━━━━\n\n> ℹ️ ʀᴇᴘʟʏ ʙᴇʟᴏᴡ ᴛʜᴇ ɴᴜᴍʙᴇʀ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ғᴏʀᴍᴀᴛ\n\n*1 ┃ ᴀᴜᴅɪᴏ sᴏɴɢ 🎵*\n*2 ┃ ᴅᴏᴄᴜᴍᴇɴᴛ sᴏɴɢ 🗂️*\n\n> © 2025 || Kᴇʀᴍ ᴍᴅ"
+    }, {
+      'quoted': _0x1439a7
+    });
+    const _0x164ac6 = _0x166c67.key.id;
+    _0x5351f6.ev.on("messages.upsert", async _0x11c496 => {
+      const _0x25ddf5 = _0x11c496.messages[0x0];
+      if (!_0x25ddf5.message) {
+        return;
+      }
+      const _0x5f20ab = _0x25ddf5.message.conversation || _0x25ddf5.message.extendedTextMessage?.["text"];
+      const _0x3277a3 = _0x25ddf5.key.remoteJid;
+      const _0x3cf2a8 = _0x25ddf5.message.extendedTextMessage && _0x25ddf5.message.extendedTextMessage.contextInfo.stanzaId === _0x164ac6;
+      if (_0x3cf2a8) {
+        await _0x5351f6.sendMessage(_0x3277a3, {
+          'react': {
+            'text': '⬇️',
+            'key': _0x25ddf5.key
+          }
         });
-
-        // Fetch download URL
-        const downloadData = await fetchJson(`https://api.giftedtech.my.id/api/download/y2mate?apikey=gifted&url=${videoUrl}`);
-        const downloadUrl = downloadData.result.download_url;
-
-        // Delete the original message and react again
-        await bot.sendMessage(messageSender, { delete: messageResponse.key });
-        await bot.sendMessage(messageSender, { react: { text: '⬆️', key: receivedMessage.key } });
-
-        // Check the user's selection and send the appropriate file
-        if (userResponse === '1') {
-          await bot.sendMessage(messageSender, {
-            audio: { url: downloadUrl },
-            mimetype: "audio/mpeg",
-            contextInfo: {
-              externalAdReply: {
-                title: video.title,
-                body: video.videoId,
-                mediaType: 1,
-                sourceUrl: video.url,
-                thumbnailUrl: video.thumbnail,
-                renderLargerThumbnail: true,
-                showAdAttribution: true
+        const _0x1cc9d0 = await fetchJson('https://api.giftedtech.my.id/api/download/y2mate?apikey=gifted&url=' + _0x5ed25e);
+        const _0x5741ec = _0x1cc9d0.result.download_url;
+        await _0x5351f6.sendMessage(_0x3277a3, {
+          'delete': _0x166c67.key
+        });
+        await _0x5351f6.sendMessage(_0x3277a3, {
+          'react': {
+            'text': '⬆️',
+            'key': _0x25ddf5.key
+          }
+        });
+        if (_0x5f20ab === '1') {
+          await _0x5351f6.sendMessage(_0x3277a3, {
+            'audio': {
+              'url': _0x5741ec
+            },
+            'mimetype': "audio/mpeg",
+            'contextInfo': {
+              'externalAdReply': {
+                'title': _0x20e1e8.title,
+                'body': _0x20e1e8.videoId,
+                'mediaType': 0x1,
+                'sourceUrl': _0x20e1e8.url,
+                'thumbnailUrl': _0x20e1e8.thumbnail,
+                'renderLargerThumbnail': true,
+                'showAdAttribution': true
               }
             }
-          }, { quoted: receivedMessage });
-
-          await bot.sendMessage(messageSender, {
-            react: { text: '✅', key: receivedMessage.key }
+          }, {
+            'quoted': _0x25ddf5
           });
-
-        } else if (userResponse === '2') {
-          await bot.sendMessage(messageSender, {
-            document: { url: downloadUrl },
-            mimetype: "audio/mp3",
-            fileName: `${video.title}.mp3`,
-            caption: "\n> *© Generated for you By Kerm MD V1 ❤️*\n "
-          }, { quoted: receivedMessage });
-
-          await bot.sendMessage(messageSender, {
-            react: { text: '✅', key: receivedMessage.key }
+          await _0x5351f6.sendMessage(_0x3277a3, {
+            'react': {
+              'text': '✅',
+              'key': _0x25ddf5.key
+            }
+          });
+        } else if (_0x5f20ab === '2') {
+          await _0x5351f6.sendMessage(_0x3277a3, {
+            'document': {
+              'url': _0x5741ec
+            },
+            'mimetype': "audio/mp3",
+            'fileName': _0x20e1e8.title + ".mp3",
+            'caption': "\n> *© Gᴇɴᴇʀᴀᴛᴇᴅ ꜰᴏʀ ʏᴏᴜ Bʏ Kᴇʀᴍ Mᴅ V1 ❤️*\n "
+          }, {
+            'quoted': _0x25ddf5
+          });
+          await _0x5351f6.sendMessage(_0x3277a3, {
+            'react': {
+              'text': '✅',
+              'key': _0x25ddf5.key
+            }
           });
         }
       }
     });
-
-  } catch (error) {
-    console.log(error);
-    reply(`${error}`);
+  } catch (_0x3c31c1) {
+    console.log(_0x3c31c1);
+    _0x233cc6('' + _0x3c31c1);
   }
 });
 
